@@ -133,6 +133,27 @@ public class Leetcode extends AbstractPractice {
         return res;
     }
 
+    // https://leetcode.com/problems/coin-change/
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        int coinsNum = 0;
+        int index = coins.length - 1;
+        while (amount > 0 && index > -1) {
+            if (amount - coins[index] >= 0) {
+                amount -= coins[index];
+                coinsNum++;
+            } else {
+                index--;
+            }
+        }
+        if (amount > 0) {
+            return -1;
+        } else {
+            return coinsNum;
+        }
+    }
+
     // public boolean isBalanced(TreeNode root) {
 
     // }

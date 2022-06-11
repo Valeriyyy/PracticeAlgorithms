@@ -3,9 +3,13 @@ package Classes;
 import java.util.*;
 
 public abstract class AbstractPractice {
-    public static <T> void printArray(List<T> arr) {
+    public static <T> void printArray(int[] arr) {
+        printList(Arrays.asList(arr));
+    }
+
+    public static <T> void printList(List<T> arr) {
         for (var item : arr) {
-            System.out.println(item);
+            println(item);
         }
     }
 
