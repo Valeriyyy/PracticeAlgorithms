@@ -10,6 +10,8 @@ public class Memoization extends AbstractPractice {
     private HashMap<Integer, Integer> fibMemo = new HashMap<Integer, Integer>();
     private HashMap<String, Long> gridTravelerMemo = new HashMap<String, Long>();
     private HashMap<Integer, Boolean> canSumMemo = new HashMap<Integer, Boolean>();
+    private HashMap<Integer, List<Integer>> howSumMemo = new HashMap<Integer, List<Integer>>();
+    private HashMap<Integer, List<Integer>> bestSumMemo = new HashMap<Integer, List<Integer>>();
 
     public int fibMemoization(int n) {
         if (n == 0 || n == 1)
@@ -49,7 +51,6 @@ public class Memoization extends AbstractPractice {
             return false;
         for (Integer num : nums) {
             int remainder = target - num;
-            println(remainder);
             if (canSum(remainder, nums)) {
                 canSumMemo.put(target, true);
                 return true;
@@ -59,20 +60,80 @@ public class Memoization extends AbstractPractice {
         return false;
     }
 
-    // https://www.youtube.com/watch?v=H9bfqozjoqs
-    public int coinChange(int[] coins, int amount) {
-        int max = amount + 1;
-        int[] memo = new int[max];
-        Arrays.fill(memo, max);
-        memo[0] = 0;
-        for (int i = 0; i < max; i++) {
-            for (int coin : coins) {
-                if (i - coin >= 0) {
-                    memo[i] = Math.min(memo[i], memo[i - coin] + 1);
-                }
+    // https://www.johncanessa.com/2021/05/31/how-sum/
+    public List<Integer> howSum(int target, int[] nums) {
+        if (howSumMemo.containsKey(target))
+            return howSumMemo.get(target);
+        if (target == 0)
+            return new ArrayList<Integer>();
+        if (target < 0)
+            return null;
+        List<Integer> lst = null;
+        for (int i = 0; i < nums.length && lst == null; i++) {
+            int num = nums[i];
+            int remainder = target - num;
+            if (!howSumMemo.containsKey(remainder)) {
+                howSumMemo.put(remainder, howSum(remainder, nums));
+            }
+            lst = howSumMemo.get(remainder);
+
+            if (lst != null) {
+                lst.add(num);
             }
         }
-        printArray(memo);
-        return memo[amount] != max ? memo[amount] : memo[amount] - 1;
+
+        return lst;
+    }
+
+    public List<Integer> bestSum(int target, int[] nums) {
+        if (bestSumMemo.containsKey(target))
+            return bestSumMemo.get(target);
+        if (target == 0)
+            return new ArrayList<>();
+        if (target < 0)
+            return null;
+        List<Integer> shortestCombination = null;
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            int remainder = target - num;
+            List<Integer> remainderCombination = bestSum(remainder, nums);
+            if (remainderCombination != null) {
+                List<Integer> combination = new ArrayList<>(remainderCombination);
+                combination.add(num);
+                if (shortestCombination == null || combination.size() < shortestCombination.size()) {
+                    shortestCombination = combination;
+                    println("found a shorter combo");
+                    printList(shortestCombination);
+                }
+            }
+            // println("");
+        }
+        bestSumMemo.put(target, shortestCombination);
+        return shortestCombination;
+    }
+
+    public int coinChangeMemoization(int amount, int[] coins) {
+        if (amount < 1)
+            return 0;
+        return helper(coins, amount, new int[amount]);
+    }
+
+    // rem: remaining coins after the last step; count[rem]:
+    // minimum number of coins to sum up to rem
+    private int helper(int[] coins, int rem, int[] count) {
+        if (rem < 0)
+            return -1; // not valid
+        if (rem == 0)
+            return 0; // completed
+        if (count[rem - 1] != 0)
+            return count[rem - 1]; // already computed, so reuse
+        int min = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            int res = helper(coins, rem - coin, count);
+            if (res >= 0 && res < min)
+                min = 1 + res;
+        }
+        count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
+        return count[rem - 1];
     }
 }

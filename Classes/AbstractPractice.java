@@ -9,8 +9,12 @@ public abstract class AbstractPractice {
 
     public static <T> void printList(List<T> arr) {
         for (var item : arr) {
-            println(item);
+            print(item + " ");
         }
+    }
+
+    public static <T> void print(T val) {
+        System.out.print(val);
     }
 
     public static <T> void println(T val) {

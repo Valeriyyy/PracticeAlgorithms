@@ -134,24 +134,23 @@ public class Leetcode extends AbstractPractice {
     }
 
     // https://leetcode.com/problems/coin-change/
-    public int coinChange(int[] coins, int amount) {
-        if (amount == 0)
+    public int coinChangeIterative(int[] coins, int amount) {
+        if (amount < 1)
             return 0;
-        int coinsNum = 0;
-        int index = coins.length - 1;
-        while (amount > 0 && index > -1) {
-            if (amount - coins[index] >= 0) {
-                amount -= coins[index];
-                coinsNum++;
-            } else {
-                index--;
+        int[] dp = new int[amount + 1];
+        int sum = 0;
+
+        while (++sum <= amount) {
+            int min = -1;
+            for (int coin : coins) {
+                if (sum >= coin && dp[sum - coin] != -1) {
+                    int temp = dp[sum - coin] + 1;
+                    min = min < 0 ? temp : (temp < min ? temp : min);
+                }
             }
+            dp[sum] = min;
         }
-        if (amount > 0) {
-            return -1;
-        } else {
-            return coinsNum;
-        }
+        return dp[amount];
     }
 
     // public boolean isBalanced(TreeNode root) {
@@ -175,4 +174,124 @@ public class Leetcode extends AbstractPractice {
         return a;
     }
 
+    List<List<Integer>> combinationSumList;
+
+    public List<List<Integer>> combinationSum(int target, int[] nums) {
+        combinationSumList = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return combinationSumList;
+        }
+        dfs(nums, target, 0, 0, new ArrayList<>());
+        return combinationSumList;
+    }
+
+    private void dfs(int[] candidates, int target, int sum, int idx, List<Integer> l) {
+        if (target == sum) {
+            combinationSumList.add(l);
+            return;
+        }
+        for (int i = idx; i < candidates.length; i++) {
+            if (sum + candidates[i] <= target) {
+                List<Integer> newList = new ArrayList<>(l);
+                newList.add(candidates[i]);
+                dfs(candidates, target, sum + candidates[i], i, newList);
+            }
+        }
+    }
+
+    // https://leetcode.com/problems/valid-parentheses/
+    public boolean isValid(String s) {
+        if (s == null || s.length() % 2 != 0) {
+            return false;
+        }
+
+        var stack = new Stack<Character>();
+        for (var c : s.toCharArray()) {
+            if (c == '(') {
+                stack.push(')');
+            } else if (c == '{') {
+                stack.push('}');
+            } else if (c == '[') {
+                stack.push(']');
+            } else if (stack.isEmpty() || stack.pop() != c) {
+                return false;
+            }
+        }
+
+        return stack.isEmpty();
+    }
+
+    // https:// leetcode.com/problems/uncommon-words-from-two-sentences/
+    public String[] uncommonFromSentences(String s1, String s2) {
+        Map<String, Integer> m = new HashMap<>();
+        for (String s : (s1 + " " + s2).split("\s")) {
+            m.put(s, m.getOrDefault(s, 0) + 1);
+        }
+        List<String> res = new ArrayList<>();
+        for (String s : m.keySet()) {
+            if (m.get(s) <= 1) {
+                res.add(s);
+            }
+        }
+
+        return res.toArray(new String[0]);
+    }
+
+    // https://leetcode.com/problems/merge-two-sorted-lists/submissions/
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode newNode = new ListNode(0);
+        ListNode curr = newNode;
+        while (list1 != null && list2 != null) {
+            int l1 = list1.val;
+            int l2 = list2.val;
+            if (l1 <= l2) {
+                curr.next = list1;
+                list1 = list1.next;
+            } else {
+                curr.next = list2;
+                list2 = list2.next;
+            }
+            curr = curr.next;
+
+        }
+        curr.next = list1 == null ? list2 : list1;
+        return newNode.next;
+    }
+
+    // https://leetcode.com/problems/merge-sorted-array/
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i = m - 1;
+        int j = n - 1;
+        int k = nums1.length - 1;
+        while (i >= 0 && j >= 0) {
+            int num1 = nums1[i];
+            int num2 = nums2[j];
+            if (num1 < num2) {
+                nums1[k--] = nums2[j--];
+            } else {
+                nums1[k--] = nums1[i--];
+            }
+        }
+
+        while (j >= 0) {
+            nums1[k--] = nums2[j--];
+        }
+    }
+
+    public int arraySign(int[] nums) {
+        int sign = 1;
+        for (int n : nums) {
+            if (n == 0) {
+                return 0;
+            }
+            if (n < 0) {
+                sign = -sign;
+            }
+        }
+        return sign;
+    }
+
+    public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+        return null;
+    }
 }
