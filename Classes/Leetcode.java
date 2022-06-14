@@ -153,13 +153,25 @@ public class Leetcode extends AbstractPractice {
         return dp[amount];
     }
 
-    // public boolean isBalanced(TreeNode root) {
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return isBalancedHelper(root) != -1;
+    }
 
-    // }
+    private int isBalancedHelper(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = isBalancedHelper(root.left);
+        int right = isBalancedHelper(root.right);
+        if (left == -1 || right == -1 || Math.abs(left - right) > 1) {
+            return -1;
+        }
 
-    // public int isBalancedHelper(TreeNode root) {
-
-    // }
+        return Math.max(left, right) + 1;
+    }
 
     public long fib(int n) {
         if (n < 2)
@@ -293,5 +305,17 @@ public class Leetcode extends AbstractPractice {
 
     public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
         return null;
+    }
+
+    // https://leetcode.com/problems/convert-1d-array-into-2d-array/
+    public int[][] construct2DArray(int[] original, int m, int n) {
+        if (original.length != m * n)
+            return new int[0][0];
+        int[][] res = new int[m][n];
+        for (int i = 0; i < original.length; i++) {
+            println(i / n + " " + i % 2);
+            res[i / n][i % n] = original[i];
+        }
+        return res;
     }
 }
