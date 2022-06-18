@@ -1,6 +1,7 @@
+package src;
 
-import Classes.Leetcode;
-import Classes.Memoization;
+import src.Classes.Leetcode;
+import src.Classes.Memoization;
 
 import java.util.*;
 

@@ -1,8 +1,7 @@
-package Classes;
+package src.Classes;
 
 import java.util.*;
-
-import DataStructures.*;
+import src.DataStructures.*;
 
 public class Leetcode extends AbstractPractice {
 
