@@ -12,6 +12,7 @@ public class Memoization extends AbstractPractice {
     private HashMap<Integer, Boolean> canSumMemo = new HashMap<Integer, Boolean>();
     private HashMap<Integer, List<Integer>> howSumMemo = new HashMap<Integer, List<Integer>>();
     private HashMap<Integer, List<Integer>> bestSumMemo = new HashMap<Integer, List<Integer>>();
+    private HashMap<String, Integer> countConstruct = new HashMap<>();
 
     public int fibMemoization(int n) {
         if (n == 0 || n == 1)
@@ -135,5 +136,21 @@ public class Memoization extends AbstractPractice {
         }
         count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
         return count[rem - 1];
+    }
+
+    public int countConstruct(String target, String[] wordBank) {
+        if(countConstruct.containsKey(target)) return countConstruct.get(target);
+        if(target.equals("")) return 1;
+
+        int totalCount = 0;
+        for(String word : wordBank) {
+            if(target.indexOf(word) == 0) {
+                String prefix = word;
+                String suffix = target.substring(prefix.length());
+                totalCount += countConstruct(suffix, wordBank);
+            }
+        }
+        countConstruct.put(target, totalCount);
+        return totalCount;
     }
 }

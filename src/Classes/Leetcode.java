@@ -317,4 +317,54 @@ public class Leetcode extends AbstractPractice {
         }
         return res;
     }
+
+    public boolean ransomNote(String ransomNote, String magazine) {
+        int[] arr = new int[128];
+        for(char c : magazine.toCharArray()) {
+            arr[c]++;
+        }
+
+        for(char c: ransomNote.toCharArray()) {
+            if(--arr[c] < 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // https://leetcode.com/problems/top-k-frequent-elements/
+    public int[] topKFrequent(int[] nums, int k) {
+        if(nums.length == 1) return nums;
+        Map<Integer, Integer> m = new HashMap<>();
+        for(int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            if(m.containsKey(num)) {
+                int val = m.get(num);
+                val++;
+                m.put(num, val);
+            } else {
+                m.put(num, 0);
+            }
+        }
+        List<Integer>[] bucket = new List[nums.length + 1];
+        for(Integer key : m.keySet()) {
+            int freq = m.get(key);
+            if(bucket[freq] == null) {
+                bucket[freq] = new ArrayList<Integer>();
+            }
+            bucket[freq].add(key);
+        }
+        List<Integer> res = new ArrayList<>();
+        for(int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
+            if(bucket[pos] != null) {
+                res.addAll(bucket[pos]);
+            }
+        }
+
+        return res.stream()
+                .filter(Objects::nonNull)
+                .mapToInt(Integer::intValue)
+                .toArray();
+    }
 }
