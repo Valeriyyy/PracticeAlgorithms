@@ -320,12 +320,12 @@ public class Leetcode extends AbstractPractice {
 
     public boolean ransomNote(String ransomNote, String magazine) {
         int[] arr = new int[128];
-        for(char c : magazine.toCharArray()) {
+        for (char c : magazine.toCharArray()) {
             arr[c]++;
         }
 
-        for(char c: ransomNote.toCharArray()) {
-            if(--arr[c] < 0) {
+        for (char c : ransomNote.toCharArray()) {
+            if (--arr[c] < 0) {
                 return false;
             }
         }
@@ -335,11 +335,12 @@ public class Leetcode extends AbstractPractice {
 
     // https://leetcode.com/problems/top-k-frequent-elements/
     public int[] topKFrequent(int[] nums, int k) {
-        if(nums.length == 1) return nums;
+        if (nums.length == 1)
+            return nums;
         Map<Integer, Integer> m = new HashMap<>();
-        for(int i = 0; i < nums.length; i++) {
+        for (int i = 0; i < nums.length; i++) {
             int num = nums[i];
-            if(m.containsKey(num)) {
+            if (m.containsKey(num)) {
                 int val = m.get(num);
                 val++;
                 m.put(num, val);
@@ -348,16 +349,16 @@ public class Leetcode extends AbstractPractice {
             }
         }
         List<Integer>[] bucket = new List[nums.length + 1];
-        for(Integer key : m.keySet()) {
+        for (Integer key : m.keySet()) {
             int freq = m.get(key);
-            if(bucket[freq] == null) {
+            if (bucket[freq] == null) {
                 bucket[freq] = new ArrayList<Integer>();
             }
             bucket[freq].add(key);
         }
         List<Integer> res = new ArrayList<>();
-        for(int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
-            if(bucket[pos] != null) {
+        for (int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
+            if (bucket[pos] != null) {
                 res.addAll(bucket[pos]);
             }
         }
@@ -366,5 +367,138 @@ public class Leetcode extends AbstractPractice {
                 .filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
                 .toArray();
+    }
+
+    // https:// leetcode.com/problems/reverse-linked-list/
+    public ListNode reverseList(ListNode head) {
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode next = head.next;
+            head.next = newHead;
+            newHead = head;
+            head = next;
+        }
+
+        return newHead;
+    }
+
+    // https://leetcode.com/problems/find-smallest-letter-greater-than-target/
+    public char nextGreatestLetter(char[] letters, char target) {
+        int n = letters.length;
+
+        int lo = 0, hi = n;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (letters[mid] > target) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+
+        return letters[lo % n];
+    }
+
+    // https://leetcode.com/problems/time-needed-to-buy-tickets/
+    public int timeRequiredToBuy(int[] tickets, int k) {
+        int timeTaken = 0;
+
+        int index = 0;
+        while (tickets[k] != 0) {
+            println(index);
+            if (k == index && tickets[k] == 0) {
+                return timeTaken;
+            }
+            if (tickets[index] == 0) {
+                if (index + 1 == tickets.length) {
+                    index = 0;
+                } else {
+                    index++;
+                }
+                continue;
+            } else {
+                tickets[index] -= 1;
+                timeTaken++;
+            }
+            if (index + 1 == tickets.length) {
+                index = 0;
+            } else {
+                index++;
+            }
+        }
+
+        return timeTaken;
+    }
+
+    // https://leetcode.com/problems/check-if-one-string-swap-can-make-strings-equal/
+    public boolean areAlmostEqual(String s1, String s2) {
+        if (s1.equals(s2))
+            return true;
+        if (s1.length() != s2.length())
+            return false;
+        List<Integer> unequalCharacters = new ArrayList<>();
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i))
+                unequalCharacters.add(i);
+            if (unequalCharacters.size() > 2)
+                return false; // added this line to short circuit the loop
+        }
+        return unequalCharacters.size() == 0 || (unequalCharacters.size() == 2
+                && s1.charAt(unequalCharacters.get(0)) == s2.charAt(unequalCharacters.get(1))
+                && s1.charAt(unequalCharacters.get(1)) == s2.charAt(unequalCharacters.get(0)));
+    }
+
+    // https://leetcode.com/problems/buddy-strings/
+    public boolean buddyStrings(String s, String goal) {
+        if (s.length() != goal.length())
+            return false;
+        if (s.equals(goal)) {
+            // if the strings are equal, create a set
+            // to hold the unique characters of s
+            Set<Character> chars = new HashSet<Character>();
+            for (char c : s.toCharArray())
+                chars.add(c);
+            // if there are less unique characters than
+            // there is the length of s, then it can be
+            // swapped
+            return chars.size() < s.length();
+        }
+        List<Integer> dif = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != goal.charAt(i)) {
+                dif.add(i);
+            }
+        }
+        // return true if the difference between the strings is just two characters
+        // and if the two strings are mirros of each other i.e s = ab and goal = ba
+        return dif.size() == 2 && s.charAt(dif.get(0)) == goal.charAt(dif.get(1))
+                && s.charAt(dif.get(1)) == goal.charAt(dif.get(0));
+    }
+
+    // https://leetcode.com/problems/lexicographical-numbers/
+    public List<Integer> lexicalOrder(int n) {
+        List<Integer> res = new ArrayList<>();
+        for (int i = 1; i < 10; i++) {
+            println("og " + i);
+            lexicalOrderDfs(i, n, res);
+        }
+        return res;
+    }
+
+    private void lexicalOrderDfs(int cur, int n, List<Integer> res) {
+        if (cur > n) {
+            return;
+        } else {
+            res.add(cur);
+            print(cur + " ");
+            for (int i = 0; i < 10; i++) {
+                if (10 * cur + i > n) {
+                    print("returning\n");
+                    return;
+                }
+                println("failed check");
+                lexicalOrderDfs(10 * cur + i, n, res);
+            }
+        }
     }
 }

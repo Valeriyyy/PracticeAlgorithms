@@ -1,5 +1,6 @@
 package src;
 
+import src.Classes.Cracking;
 import src.Classes.Leetcode;
 import src.Classes.Memoization;
 
@@ -10,9 +11,7 @@ public class Program {
         System.out.println("Hello World");
         var leet = new Leetcode();
         var memo = new Memoization();
-        int[] arr = new int[] { 2, 5, 1, 6, 5, 1};
-        String[] stringArr = new String[] {"purp", "p", "ur", "le", "purpl"};
-        println(memo.countConstruct("purple", stringArr));
+        var cracking = new Cracking();
     }
 
     public static <T> void printArray(int[] arr) {
