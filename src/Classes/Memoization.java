@@ -13,6 +13,7 @@ public class Memoization extends AbstractPractice {
     private HashMap<Integer, List<Integer>> howSumMemo = new HashMap<Integer, List<Integer>>();
     private HashMap<Integer, List<Integer>> bestSumMemo = new HashMap<Integer, List<Integer>>();
     private HashMap<String, Integer> countConstruct = new HashMap<>();
+    private HashMap<String, List<List<String>>> allConstructMemo = new HashMap<>();
 
     public int fibMemoization(int n) {
         if (n == 0 || n == 1)
@@ -139,12 +140,14 @@ public class Memoization extends AbstractPractice {
     }
 
     public int countConstruct(String target, String[] wordBank) {
-        if(countConstruct.containsKey(target)) return countConstruct.get(target);
-        if(target.equals("")) return 1;
+        if (countConstruct.containsKey(target))
+            return countConstruct.get(target);
+        if (target.equals(""))
+            return 1;
 
         int totalCount = 0;
-        for(String word : wordBank) {
-            if(target.indexOf(word) == 0) {
+        for (String word : wordBank) {
+            if (target.indexOf(word) == 0) {
                 String prefix = word;
                 String suffix = target.substring(prefix.length());
                 totalCount += countConstruct(suffix, wordBank);
@@ -152,5 +155,32 @@ public class Memoization extends AbstractPractice {
         }
         countConstruct.put(target, totalCount);
         return totalCount;
+    }
+    
+    public List<List<String>> allConstruct(String target, String[] wordBank) {
+        if (allConstructMemo.containsKey(target))
+            return allConstructMemo.get(target);
+        if (target.length() == 0)
+            return new ArrayList<>();
+        List<List<String>> result = new ArrayList<>();
+        for (String word : wordBank) {
+            if (target.indexOf(word) == 0) {
+                String suffix = target.substring(word.length());
+                List<List<String>> suffixWays = allConstruct(suffix, wordBank);
+                List<List<String>> targetWays = new ArrayList<>();
+
+                for (int i = 0; i < suffixWays.size(); i++) {
+                    List<String> tmp = new ArrayList<>(suffixWays.get(i));
+                    tmp.add(0, word);
+                }
+
+                for (int i = 0; i < targetWays.size(); i++) {
+                    result.add(new ArrayList<>(targetWays.get(i)));
+                }
+            }
+        }
+
+        allConstructMemo.put(target, result);
+        return result;
     }
 }

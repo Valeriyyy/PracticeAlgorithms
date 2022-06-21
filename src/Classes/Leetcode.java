@@ -9,18 +9,20 @@ public class Leetcode extends AbstractPractice {
         super();
     }
 
-    public int[] q2099(int[] nums, int k) {
+    // https://leetcode.com/problems/find-subsequence-of-length-k-with-the-largest-sum/
+    public int[] maxSubsequence(int[] nums, int k) {
         PriorityQueue<Integer> pq = new PriorityQueue<>(k + 1);
         for (int n : nums) {
             pq.offer(n);
             if (pq.size() > k) {
-                pq.poll();
+                println(pq.poll());
             }
         }
-        println(pq.size());
+        println("pq size " + pq.size());
         Map<Integer, Integer> freq = new HashMap<>();
         for (int n : pq) {
-            freq.merge(n, 1, Integer::sum);
+            int f = freq.merge(n, 1, Integer::sum);
+            println("f " + n + " " + f);
         }
         int[] seq = new int[k];
         int i = 0;
@@ -35,7 +37,14 @@ public class Leetcode extends AbstractPractice {
 
     // https://leetcode.com/problems/find-target-indices-after-sorting-array/
     public List<Integer> targetIndices(int[] nums, int target) {
+        // count hold how many times the target was encounterd
+        // lessThan holds how many numbers are going to be before
+        // the target in a sorted list and will be the starting index
+        // of the target(s)
         int count = 0, lessthan = 0;
+        // loop through numbers and keep track of how many numbers are
+        // less than the target number so we can count the index
+        // of the target if the list was sorted.
         for (int n : nums) {
             System.out.println("this is num " + n);
             if (n == target) {
@@ -47,8 +56,10 @@ public class Leetcode extends AbstractPractice {
                 System.out.println("lessthan " + lessthan);
             }
         }
-
+        println("after loop less than " + lessthan);
         List<Integer> result = new ArrayList<>();
+        // loop up to how many times the target number was encountered in the loop
+        // then increment lessThan to equal the would be indexes
         for (int i = 0; i < count; i++) {
             result.add(lessthan++);
         }
@@ -62,7 +73,9 @@ public class Leetcode extends AbstractPractice {
             uniqueCandies.add(candyType[i]);
         }
 
-        return uniqueCandies.size() >= candyType.length / 2 ? candyType.length / 2 : uniqueCandies.size();
+        return uniqueCandies.size() >= candyType.length / 2
+                ? candyType.length / 2
+                : uniqueCandies.size();
     }
 
     public ListNode reverseLinkedList(ListNode head) {
@@ -348,7 +361,8 @@ public class Leetcode extends AbstractPractice {
                 m.put(num, 0);
             }
         }
-        List<Integer>[] bucket = new List[nums.length + 1];
+        int length = nums.length + 1;
+        ArrayList<Integer>[] bucket = new ArrayList[length];
         for (Integer key : m.keySet()) {
             int freq = m.get(key);
             if (bucket[freq] == null) {
@@ -500,5 +514,24 @@ public class Leetcode extends AbstractPractice {
                 lexicalOrderDfs(10 * cur + i, n, res);
             }
         }
+    }
+
+    // https://leetcode.com/problems/climbing-stairs/
+    public int climbStairs(int n) {
+        if (n <= 2)
+            return n;
+        int a = 0, b = 1;
+        while (n-- > 0) {
+            int sum = a + b;
+            a = b;
+            b = sum;
+            println(b);
+        }
+
+        // in this problem we are returning b in comparison to a in
+        // the regular fibonacci sequence because we pretty much just need 
+        // the sum of the previous and the second to previous number
+        // of steps required to get to the step.
+        return b;
     }
 }
