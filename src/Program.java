@@ -2,7 +2,7 @@ package src;
 
 import src.Classes.Cracking;
 import src.Classes.Leetcode;
-import src.Classes.Memoization;
+import src.Classes.DynamicProgramming;
 
 import java.util.*;
 
@@ -10,8 +10,10 @@ public class Program {
     public static void main(String[] args) {
         System.out.println("Hello World");
         var leet = new Leetcode();
-        var memo = new Memoization();
+        var dp = new DynamicProgramming();
         var cracking = new Cracking();
+        printArray(dp.bestSumTabulation(122, new int[] { 6, 3, 5, 25 }));
+
     }
 
     public static <T> void printArray(int[] arr) {

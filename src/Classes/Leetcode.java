@@ -362,6 +362,7 @@ public class Leetcode extends AbstractPractice {
             }
         }
         int length = nums.length + 1;
+        @SuppressWarnings("unchecked")
         ArrayList<Integer>[] bucket = new ArrayList[length];
         for (Integer key : m.keySet()) {
             int freq = m.get(key);
@@ -493,7 +494,6 @@ public class Leetcode extends AbstractPractice {
     public List<Integer> lexicalOrder(int n) {
         List<Integer> res = new ArrayList<>();
         for (int i = 1; i < 10; i++) {
-            println("og " + i);
             lexicalOrderDfs(i, n, res);
         }
         return res;
@@ -507,10 +507,8 @@ public class Leetcode extends AbstractPractice {
             print(cur + " ");
             for (int i = 0; i < 10; i++) {
                 if (10 * cur + i > n) {
-                    print("returning\n");
                     return;
                 }
-                println("failed check");
                 lexicalOrderDfs(10 * cur + i, n, res);
             }
         }
@@ -525,7 +523,6 @@ public class Leetcode extends AbstractPractice {
             int sum = a + b;
             a = b;
             b = sum;
-            println(b);
         }
 
         // in this problem we are returning b in comparison to a in

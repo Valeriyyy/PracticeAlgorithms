@@ -4,7 +4,9 @@ import java.util.*;
 
 public abstract class AbstractPractice {
     public static <T> void printArray(int[] arr) {
-        printList(Arrays.asList(arr));
+        for (var item : arr) {
+            print(item + " ");
+        }
     }
 
     public static <T> void printList(List<T> arr) {
